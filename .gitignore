@@ -1,0 +1,15 @@
+# General
+.DS_Store
+Thumbs.db
+*.log
+*.bak
+*.swp
+*.swo
+
+# IDEs
+.vscode/
+.idea/
+
+# Project specific files
+Báo cáo.docx
+Lý thuyết Backend Express NodeJS.docx
