@@ -20,3 +20,20 @@ export const getProduct = async (req, res) => {
         return res.status(500).json({message: "Lỗi hệ thống"});
     }
 };
+
+export const search = async (req, res) => {
+    try {
+        const { q } = req.query;
+        if (!q || q.trim() === '') return res.status(200).json([]);
+        const regex = new RegExp(q, 'i');
+        const products = await Product.find({ name: regex });
+        return res.status(200).json(products || []);
+    } catch (error) {
+        console.error('Lỗi khi search:', error);
+        return res.status(500).json({
+            success: false,
+            message: "Lỗi hệ thống",
+            error: error.message
+        });
+    }
+};

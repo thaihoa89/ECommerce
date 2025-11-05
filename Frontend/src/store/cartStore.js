@@ -35,7 +35,7 @@ const useCartStore = create(persist(
             const { isLoggedIn } = useAuthenStore.getState();
             if (!isLoggedIn) {
                 toast.error('Bạn cần đăng nhập để thực hiện chức năng này');
-                // Dispatch custom event to notify App component
+                // Dispatch custom event trên đối tượng window thì sẽ phát ra trên phạm vi toàn cục trang web, App là thành phần gốc sẽ được notify để xử lý sự kiện
                 window.dispatchEvent(new CustomEvent('auth:unauthorized'));
                 return;
             }

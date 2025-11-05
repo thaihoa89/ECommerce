@@ -9,6 +9,7 @@ import SignUpPage from './pages/SignUpPage';
 import SignInPage from './pages/SignInPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import CartPage from './pages/CartPage';
+import SearchPage from './pages/SearchPage';
 
 // Tạo Layout component
 const MainLayout = () => (
@@ -50,6 +51,7 @@ function App() {
                     {/* public routes */}
                     <Route path="" element={<Navigate to="/products" />} />
                     <Route path="/products" element={<ProductsPage />} />
+                    <Route path="/search" element={<SearchPage />} />
                         
                     {/* protected routes */}
                     <Route element={<ProtectedRoute />}>
