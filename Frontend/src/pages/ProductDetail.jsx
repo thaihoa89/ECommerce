@@ -1,16 +1,19 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';   // Lấy tham số của dynamic route
-import { axiosPublic } from '../utils/axiosInstance';
 import renderRating from '../utils/renderRating';
+import useCartStore from '../store/cartStore';
+import { axiosInstance } from '../utils/axiosInstance';
 
 const ProductDetail = () => {
     const { id } = useParams();
     const [product, setProduct] = useState(null);
+    const [quantity, setQuantity] = useState(1);
+    const addToCart = useCartStore((state) => state.addToCart);
 
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const { data } = await axiosPublic.get(`/products/${id}`);
+                const { data } = await axiosInstance.get(`/products/${id}`);   // Axios trả về một object response có cấu trúc: { data: {...}, status: 200, config: {...}, ... }
                 setProduct(data);
             } catch (error) {
                 setProduct(null);
@@ -61,12 +64,15 @@ const ProductDetail = () => {
                         <div className="my-4 text-red-600 text-lg sm:text-2xl lg:text-3xl font-bold">{product.price.toLocaleString('vi-VN')} VNĐ</div>
                         <p className="italic mt-3 text-xs sm:text-sm lg:text-base text-gray-500">Còn {product.stock} sản phẩm trong kho</p>
                         <div className="my-5 flex items-center gap-3 sm:gap-5">
-                            <select className="border rounded h-10 px-2 sm:px-3 bg-white">
-                                {[...Array(10).keys()].map(i => <option key={i + 1} value={i + 1}>{i + 1}</option>)}
-                            </select>
-                            <button className="bg-blue-600 text-white px-3 sm:px-5 py-2 rounded h-10 hover:bg-blue-700 active:bg-blue-900 active:scale-95 transition cursor-pointer">
-                                🛒 Thêm vào giỏ
-                            </button>
+                            <select 
+                                className="border rounded h-10 px-2 sm:px-3 bg-white"
+                                value={quantity}
+                                onChange={(e) => setQuantity(parseInt(e.target.value))}
+                            >{[...Array(10).keys()].map(i => <option key={i + 1} value={i + 1}>{i + 1}</option>)}</select>
+                            <button 
+                                className="bg-blue-600 text-white px-3 sm:px-5 py-2 rounded h-10 hover:bg-blue-700 active:bg-blue-900 active:scale-95 transition cursor-pointer"
+                                onClick={() => {addToCart(product._id, quantity)}}
+                            >🛒 Thêm vào giỏ</button>
                         </div>
                         <p className="text-xs sm:text-sm lg:text-lg text-gray-700 leading-relaxed text-justify">{product.description}</p>
                     </div>

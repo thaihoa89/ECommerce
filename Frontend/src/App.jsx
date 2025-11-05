@@ -8,12 +8,13 @@ import ProductDetail from './pages/ProductDetail';
 import SignUpPage from './pages/SignUpPage';
 import SignInPage from './pages/SignInPage';
 import ProtectedRoute from './components/ProtectedRoute';
+import CartPage from './pages/CartPage';
 
 // Tạo Layout component
 const MainLayout = () => (
     <div className="flex flex-col min-h-screen">
         <Header />
-        <main className="flex-grow">
+        <main className="flex-grow flex flex-col">
             {/* Outlet cho biết vị trí các component của route con sẽ được hiển thị trong component của route cha */}
             <Outlet />
         </main>
@@ -36,7 +37,7 @@ function App() {
 
     return (
         <>
-            <Toaster position="top-right" richColors />
+            <Toaster position="top-left" richColors />
 
             <Routes>
                 {/* Routes không có layout */}
@@ -45,6 +46,7 @@ function App() {
 
                 {/* Routes có layout */}
                 <Route element={<MainLayout />}>
+                
                     {/* public routes */}
                     <Route path="" element={<Navigate to="/products" />} />
                     <Route path="/products" element={<ProductsPage />} />
@@ -52,6 +54,7 @@ function App() {
                     {/* protected routes */}
                     <Route element={<ProtectedRoute />}>
                         <Route path="/products/:id" element={<ProductDetail />} />
+                        <Route path="/cart" element={<CartPage />} />
                     </Route>
                     
                 </Route>

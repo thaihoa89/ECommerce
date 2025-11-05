@@ -11,7 +11,7 @@ const useAuthenStore = create(persist(
         login: (user) => set({ isLoggedIn: true, user }),
         logout: () => set({ isLoggedIn: false, user: null })
     }), {
-        name: "my-app-state"
+        name: "authen-state"
     }
 ));
 

@@ -3,9 +3,67 @@ import Product from '../models/product.js';
 
 // Lấy thông tin giỏ hàng
 export const getCart = async (req, res) => {
-    const userId = req.user._id;
+    const userId = req.user._id;    
     try {
-        const cart = await Cart.findOne({ userId }).populate('items.productId', 'name price imageUrl'); // Lấy thêm thông tin chi tiết của sản phẩm
+        const cart = await Cart.findOne({ userId }).populate('items.productId', 'name rating ratingCount price imageUrl'); // Lấy thêm thông tin chi tiết của sản phẩm
+        /*  Nếu không populate - không điền đẩy đủ object liên kết từ collection khác vào trường productId thì productId của cart tìm thấy chỉ là string:
+            {
+                "_id": "5g6d546435fgdfsdf",
+                "userId": "k67g4g6k68j67",
+                "items": [
+                    {
+                        "_id": "v48s745ds2s15df4",
+                        "productId": "507f1f77bcf86cd799439011",   // ← CHỈ LÀ STRING ID
+                        "quantity": 2,
+                        "price": 15000000
+                    },
+                    {
+                        "_id": "6gfhd5g4h6d6sd2fsfa",
+                        "productId": "507f1f77bcf86cd799439022",   // ← CHỈ LÀ STRING ID
+                        "quantity": 1,
+                        "price": 500000
+                    }
+                ],
+                "createdAt": "2024-11-01T10:00:00.000Z",
+                "updatedAt": "2024-11-04T15:30:00.000Z"
+            }
+            Nếu có populate - trường productId của cart tìm thấy là object sản phẩm đầy đủ liên kết từ collecton products:
+            {
+                "_id": "5g6d546435fgdfsdf",
+                "userId": "k67g4g6k68j67",
+                "items": [
+                    {
+                        "_id": "v48s745ds2s15df4",
+                        "productId": {                             // ← ĐÂY LÀ OBJECT ĐẦY ĐỦ, KHÔNG PHẢI STRING!
+                            "_id": "507f1f77bcf86cd799439011",
+                            "id": "dtp003",
+                            "name": "Laptop Dell XPS 13",
+                            "rating": 4.5,
+                            "ratingCount": 120,
+                            "imageUrl": "..."
+                        },
+                        "quantity": 2,
+                        "price": 15000000
+                    },
+                    {
+                        "_id": "6gfhd5g4h6d6sd2fsfa",
+                        "productId": {                             // ← ĐÂY LÀ OBJECT ĐẦY ĐỦ, KHÔNG PHẢI STRING!
+                            "_id": "hgd32132zxc45wrtkj54m",
+                            "id": "app041",
+                            "name": "Tủ lạnh Logitecg",
+                            "rating": 4.5,
+                            "ratingCount": 120,
+                            "imageUrl": "..."
+                        },
+                        "quantity": 1,
+                        "price": 500000
+                    }
+                ],
+                "createdAt": "2024-11-01T10:00:00.000Z",
+                "updatedAt": "2024-11-04T15:30:00.000Z"
+            }
+        */
+
         if (!cart) {
             return res.status(404).json({ message: 'Không tìm thấy giỏ hàng' });
         }
@@ -54,6 +112,7 @@ export const addToCart = async (req, res) => {
         await cart.save();
 
         res.status(200).json({
+            success: true,
             message: 'Thêm sản phẩm vào giỏ hàng thành công',
             cart
         });

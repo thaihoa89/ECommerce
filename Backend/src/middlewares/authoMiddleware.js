@@ -40,14 +40,14 @@ const protectedRoute =  async (req, res, next) => {
         console.log('Lỗi khi xác minh JWT trong authoMiddleware: ', error.message)
 
         if (error.name === 'JsonWebTokenError') {
-            res.status(401).json({
+            return res.status(401).json({
                 success: false,
                 message: 'JWT token không hợp lệ',
             });
         }
 
         if (error.name === 'TokenExpiredError') {
-            res.status(401).json({
+            return res.status(401).json({
                 success: false,
                 message: 'JWT token đã hết hạn',
             });
